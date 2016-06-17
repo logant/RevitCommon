@@ -1,0 +1,4 @@
+D:\Development\Git\Revit\RevitLib\RevitLib\bin\Release\LINE.RevitCommon.dll
+D:\Development\Git\Revit\RevitLib\RevitLib\bin\Release\LINE.RevitCommon.pdb
+D:\Development\Git\Revit\RevitLib\RevitLib\obj\Release\LINE.RevitCommon.dll
+D:\Development\Git\Revit\RevitLib\RevitLib\obj\Release\LINE.RevitCommon.pdb

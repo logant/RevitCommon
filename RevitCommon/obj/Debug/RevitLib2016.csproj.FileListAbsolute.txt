@@ -1,0 +1,5 @@
+D:\Development\Git\Revit\RevitLib\RevitLib\obj\Debug\RevitLib2016.csprojResolveAssemblyReference.cache
+D:\Development\Git\Revit\RevitLib\RevitLib\bin\Debug\LINE.RevitCommon.dll
+D:\Development\Git\Revit\RevitLib\RevitLib\bin\Debug\LINE.RevitCommon.pdb
+D:\Development\Git\Revit\RevitLib\RevitLib\obj\Debug\LINE.RevitCommon.dll
+D:\Development\Git\Revit\RevitLib\RevitLib\obj\Debug\LINE.RevitCommon.pdb

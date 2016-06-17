@@ -1,5 +1,0 @@
-D:\Development\Git\Revit\RevitLib\RevitLib\bin\Debug\RevitLib2016.dll
-D:\Development\Git\Revit\RevitLib\RevitLib\bin\Debug\RevitLib2016.pdb
-D:\Development\Git\Revit\RevitLib\RevitLib\obj\Debug\RevitLib2016.csprojResolveAssemblyReference.cache
-D:\Development\Git\Revit\RevitLib\RevitLib\obj\Debug\RevitLib2016.dll
-D:\Development\Git\Revit\RevitLib\RevitLib\obj\Debug\RevitLib2016.pdb
