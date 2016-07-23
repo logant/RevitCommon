@@ -20,3 +20,14 @@ D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon_Mar
 D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon_MarkupCompile.lref
 D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\UILocation.baml
 D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.g.resources
+C:\Users\tlogan\Documents\Git\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.csprojResolveAssemblyReference.cache
+C:\Users\tlogan\Documents\Git\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.csproj.ResolveComReference.cache
+C:\Users\tlogan\Documents\Git\RevitCommon\RevitCommon\obj\x64\Release\UILocation.g.cs
+C:\Users\tlogan\Documents\Git\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon_MarkupCompile.cache
+C:\Users\tlogan\Documents\Git\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon_MarkupCompile.lref
+C:\Users\tlogan\Documents\Git\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.dll
+C:\Users\tlogan\Documents\Git\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.pdb
+C:\Users\tlogan\Documents\Git\RevitCommon\RevitCommon\bin\x64\Release\RevitCommon.dll
+C:\Users\tlogan\Documents\Git\RevitCommon\RevitCommon\bin\x64\Release\RevitCommon.pdb
+C:\Users\tlogan\Documents\Git\RevitCommon\RevitCommon\obj\x64\Release\UILocation.baml
+C:\Users\tlogan\Documents\Git\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.g.resources
