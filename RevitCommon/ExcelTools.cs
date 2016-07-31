@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using MSExcel = Microsoft.Office.Interop.Excel;
 
 namespace RevitCommon
@@ -187,11 +189,11 @@ namespace RevitCommon
 
             // Open the Excel file and get the worksheet
             MSExcel.Application excelApp = null;
-            bool alreadyOpen = false;
+            bool closeExcel = true;
             try
             {
-                excelApp = (MSExcel.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
-                alreadyOpen = true;
+                excelApp = (MSExcel.Application)Marshal.GetActiveObject("Excel.Application");
+                closeExcel = false;
             }
             catch { }
             if (excelApp == null)
@@ -199,21 +201,27 @@ namespace RevitCommon
 
 
             MSExcel.Workbook workbook = null;
-
+            bool closeWorkbook = true;
             // See if the workbook is open already
             foreach (MSExcel.Workbook wb in excelApp.Workbooks)
             {
                 if (wb.FullName.ToLower() == filePath.ToLower())
                 {
                     workbook = wb;
+                    closeWorkbook = false;
                     break;
                 }
             }
             if (workbook == null)
+            {
+                var workbooks = excelApp.Workbooks;
                 workbook = excelApp.Workbooks.Open(filePath);
+                Marshal.ReleaseComObject(workbooks);
+            }
 
             MSExcel.Worksheet worksheet = null;
-            foreach (MSExcel.Worksheet ws in workbook.Sheets)
+            MSExcel.Sheets worksheets = workbook.Sheets;
+            foreach (MSExcel.Worksheet ws in worksheets)
             {
                 Console.WriteLine(worksheetName);
                 if (ws.Name.ToLower() == worksheetName.ToLower())
@@ -222,6 +230,7 @@ namespace RevitCommon
                     break;
                 }
             }
+            
 
             // Read through the data in the excel file and add it to our data variable.
             if (null != worksheet)
@@ -242,6 +251,7 @@ namespace RevitCommon
                     {
                         MSExcel.Range headerCell = usedRange.Cells[1, i];
                         headers.Add(headerCell.Text);
+                        Marshal.ReleaseComObject(headerCell);
                     }
                     catch { }
                 }
@@ -262,16 +272,36 @@ namespace RevitCommon
                         {
                             rowData.Add(string.Empty);
                         }
+                        Marshal.ReleaseComObject(cell);
                     }
                     data.Add(rowData);
                 }
+                Marshal.ReleaseComObject(usedRange);
             }
+            
+
+            // Close the worksheet
+            //worksheet = null;
+            //worksheets = null;
+            Marshal.ReleaseComObject(worksheet);
+            Marshal.ReleaseComObject(worksheets);
             // Close the workbook if it was opened via this command
-            if (!alreadyOpen)
+            if (closeWorkbook)
             {
-                workbook.Close();
-                excelApp.Quit();
+                workbook.Close(false, filePath, Missing.Value);
+                Marshal.ReleaseComObject(workbook);
             }
+            else
+                Marshal.ReleaseComObject(workbook);
+
+            if (closeExcel)
+            {
+                excelApp.Quit();
+                Marshal.ReleaseComObject(excelApp);
+            }
+            else
+                Marshal.ReleaseComObject(excelApp);
+
 
             //  Send that sweet data home.
             return data;
@@ -288,11 +318,11 @@ namespace RevitCommon
 
             // Open the Excel file and get the worksheet
             MSExcel.Application excelApp = null;
-            bool alreadyOpen = false;
+            bool closeExcel = true;
             try
             {
-                excelApp = (MSExcel.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
-                alreadyOpen = true;
+                excelApp = (MSExcel.Application)Marshal.GetActiveObject("Excel.Application");
+                closeExcel = false;
             }
             catch { }
             if (excelApp == null)
@@ -300,30 +330,41 @@ namespace RevitCommon
 
 
             MSExcel.Workbook workbook = null;
-
+            bool closeWorkbook = true;
             // See if the workbook is open already
             foreach (MSExcel.Workbook wb in excelApp.Workbooks)
             {
                 if (wb.FullName.ToLower() == filePath.ToLower())
                 {
                     workbook = wb;
+                    closeWorkbook = false;
                     break;
                 }
             }
             if (workbook == null)
-                workbook = excelApp.Workbooks.Open(filePath);
+            {
+                var workbooks = excelApp.Workbooks;
+                workbook = workbooks.Open(filePath);
+                Marshal.ReleaseComObject(workbooks);
+            }
 
             // Get the worksheet names
             foreach (MSExcel.Worksheet ws in workbook.Sheets)
             {
                 worksheets.Add(ws.Name);
+                Marshal.ReleaseComObject(ws);
             }
 
-            // Close the workbook if it was opened via this command
-            if (!alreadyOpen)
+            if (closeWorkbook)
             {
-                workbook.Close();
+                workbook.Close(false, filePath, Missing.Value);
+                Marshal.ReleaseComObject(workbook);
+            }
+            
+            if(closeExcel)
+            {
                 excelApp.Quit();
+                Marshal.ReleaseComObject(excelApp);
             }
 
             return worksheets;
