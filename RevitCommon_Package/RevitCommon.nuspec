@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>RevitCommon</id>
+    <version>1.1.1</version>
+    <title>RevitCommon</title>
+    <authors>Timothy Logan</authors>
+    <owners>HKS LINE, www.hksline.com</owners>
+    <licenseUrl>http://www.wtfpl.net/</licenseUrl>
+    <projectUrl>https://github.com/logant/RevitCommon</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Common Revit API Functionality</description>
+    <releaseNotes>Adding additional properties to HKSCommand attribute.</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>RevitCommon HKS LINE</tags>
+    <dependencies>
+    </dependencies>
+  </metadata>
+</package>

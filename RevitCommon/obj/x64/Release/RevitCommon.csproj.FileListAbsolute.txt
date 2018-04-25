@@ -20,3 +20,7 @@ D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon_Mar
 D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon_MarkupCompile.lref
 D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\UILocation.baml
 D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.g.resources
+D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\NotificationWindow.g.cs
+D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\NotificationWindow.baml
+D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\GeneratedInternalTypeHelper.g.cs
+D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.csproj.CoreCompileInputs.cache

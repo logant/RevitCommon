@@ -1,11 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Autodesk.Revit.DB;
+using adWin = Autodesk.Windows;
 
 namespace RevitCommon
 {
     public class HKS
     {
+        // Old Log Path. The line server was moved from NT11 to LINE-FS-01
+        //private static string logPath = @"\\nt11\00\00603.000\01_LINE\tlogan\experiements\LINEtools_[YEAR].txt";
+
+        // Current server path.
+        private static string logPath = @"\\line-fs-01\01_Projects\Side-Projects\RevitPlugin_Logging\LINEtools_[YEAR].txt";
+
         /// <summary>
         /// Returns the scale of a document assuming a meter as the base unit.  So meters should be 1.0, feet should be 0.3048 and so on.
         /// </summary>
@@ -69,7 +77,7 @@ namespace RevitCommon
                 string year = DateTime.Now.Year.ToString();
 
                 // Path to where the log is stored
-                string userLogFilePath = @"\\nt11\00\00603.000\01_LINE\tlogan\experiments\LINEtools_" + year + ".txt";
+                string userLogFilePath = logPath.Replace("[YEAR]", year);
 
                 // If the file already exists, just append a new line to the end of the file.
                 if (File.Exists(userLogFilePath))
@@ -86,11 +94,68 @@ namespace RevitCommon
                     File.WriteAllLines(userLogFilePath, newData);
                 }
                 // else it probably is being run outside of HKS's network or the file is busy.  Consider making a simple webcall to a website?
+
+                // EasterEgg Pop-Up
+                Random r = new Random();
+                int choice = r.Next(1000);
+                // Currently disabled
+                choice = 1001;
+                if (choice <= 150)
+                {
+                    bool lineNotification = false;
+                    if (choice <= 50)
+                        lineNotification = true;
+                    string message = "$10 has been deducted from your project budget and given to HKS LINE to fund more awesome tools!";
+
+                    if (File.Exists(@"\\nt11\00\00603.000\01_LINE\tlogan\_PluginContent\basho.txt"))
+                    {
+                        List<string> bashoHaikus = new List<string>();
+                        StreamReader reader = new StreamReader(@"\\nt11\00\00603.000\01_LINE\tlogan\_PluginContent\basho.txt");
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            bashoHaikus.Add(line.Replace("\\n", Environment.NewLine));
+                        }
+
+                        choice = r.Next(10);
+                        if (choice > 6)
+                        {
+                            choice = r.Next(bashoHaikus.Count - 1);
+                            message = bashoHaikus[choice];
+                        }
+                    }
+
+                    // Show the apprpriate notification.
+                    if (lineNotification)
+                        UI.Notification("LINE Thanks You!", message, true);
+                    else
+                        ShowBalloonTip("LINE Thanks You!", message, string.Empty);
+                }
             }
-            catch (Exception ex)
+            catch 
             {
-                Console.WriteLine("Error:\n" + ex.Message);
             }
+        }
+
+        public static void ShowBalloonTip(string title, string message, string toolTip)
+        {
+            Autodesk.Internal.InfoCenter.ResultItem ri = new Autodesk.Internal.InfoCenter.ResultItem();
+            ri.Category = title;
+            ri.Title = message;
+            ri.TooltipText = toolTip;
+            ri.Uri = new System.Uri("http://www.hksline.com");
+
+            ri.IsFavorite = true;
+            ri.IsNew = true;
+            ri.ResultClicked += new EventHandler<Autodesk.Internal.InfoCenter.ResultClickEventArgs>(ri_ResultClicked);
+
+            adWin.ComponentManager.InfoCenterPaletteManager.ShowBalloon(ri);
+        }
+
+        private static void ri_ResultClicked(object sender, Autodesk.Internal.InfoCenter.ResultClickEventArgs e)
+        {
+            Autodesk.Internal.InfoCenter.ResultItem ri = (Autodesk.Internal.InfoCenter.ResultItem)sender;
+            System.Diagnostics.Process.Start(ri.Uri.ToString());
         }
     }
 }
