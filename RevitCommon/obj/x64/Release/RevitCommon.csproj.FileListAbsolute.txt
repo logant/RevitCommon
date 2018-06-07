@@ -1,6 +1,5 @@
 D:\Development\Git\Revit\RevitCommon\RevitCommon\bin\x64\Release\RevitCommon.dll
 D:\Development\Git\Revit\RevitCommon\RevitCommon\bin\x64\Release\RevitCommon.pdb
-D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.csprojResolveAssemblyReference.cache
 D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.csproj.ResolveComReference.cache
 D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.dll
 D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.pdb
@@ -24,3 +23,4 @@ D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\NotificationWin
 D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\NotificationWindow.baml
 D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\GeneratedInternalTypeHelper.g.cs
 D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.csproj.CoreCompileInputs.cache
+D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.csprojAssemblyReference.cache

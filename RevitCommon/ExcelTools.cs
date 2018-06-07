@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using MSExcel = Microsoft.Office.Interop.Excel;
 
 namespace RevitCommon
@@ -379,13 +380,17 @@ namespace RevitCommon
             bool alreadyOpen = false;
             try
             {
-                excelApp = (MSExcel.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
+                excelApp = (MSExcel.Application) System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
                 alreadyOpen = true;
+                
             }
             catch { }
-            if (excelApp == null)
-                excelApp = new MSExcel.Application();
 
+            if (excelApp == null)
+            {
+                excelApp = new MSExcel.Application();
+                alreadyOpen = false;
+            }
 
             MSExcel.Workbook workbook = null;
 
@@ -477,18 +482,27 @@ namespace RevitCommon
 
             // Open the Excel file and get the worksheet
             MSExcel.Application excelApp = null;
+            MSExcel.Workbook workbook = null;
+
             bool alreadyOpen = false;
+            bool wbOpen = false;
             try
             {
-                excelApp = (MSExcel.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
+                excelApp = (MSExcel.Application) System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
                 alreadyOpen = true;
             }
-            catch { }
+            catch
+            {
+                Console.WriteLine("Caught");
+            }
+
             if (excelApp == null)
+            {
                 excelApp = new MSExcel.Application();
+                alreadyOpen = false;
+            }
 
 
-            MSExcel.Workbook workbook = null;
 
             // See if the workbook is open already
             foreach (MSExcel.Workbook wb in excelApp.Workbooks)
@@ -511,11 +525,129 @@ namespace RevitCommon
             // Close the workbook if it was opened via this command
             if (!alreadyOpen)
             {
+                
                 workbook.Close();
                 excelApp.Quit();
+                
             }
 
             return worksheets;
+        }
+
+        /// <summary>
+        /// Get the names of all worksheets in the selected Excel file.
+        /// </summary>
+        /// <param name="filePath">Path to an excel file</param>
+        /// <returns></returns>
+        public static List<string> GetWorksheetNames(string filePath, out bool appOpen, out bool workbookOpen)
+        {
+            List<string> worksheets = new List<string>();
+
+            // Open the Excel file and get the worksheet
+            MSExcel.Application excelApp = null;
+            MSExcel.Workbook workbook = null;
+
+            bool alreadyOpen = false;
+            bool wbOpen = false;
+            try
+            {
+                excelApp = (MSExcel.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
+                alreadyOpen = true;
+            }
+            catch
+            {
+                
+            }
+
+            if (excelApp == null)
+            {
+                excelApp = new MSExcel.Application();
+                alreadyOpen = false;
+            }
+
+
+
+            // See if the workbook is open already
+            foreach (MSExcel.Workbook wb in excelApp.Workbooks)
+            {
+                if (wb.FullName.ToLower() == filePath.ToLower())
+                {
+                    workbook = wb;
+                    break;
+                }
+            }
+            if (workbook == null)
+                workbook = excelApp.Workbooks.Open(filePath);
+
+            // Get the worksheet names
+            foreach (MSExcel.Worksheet ws in workbook.Sheets)
+            {
+                worksheets.Add(ws.Name);
+            }
+
+            appOpen = alreadyOpen;
+            workbookOpen = wbOpen;
+
+            return worksheets;
+        }
+
+        public static void CloseWorkbook(string filePath)
+        {
+            MSExcel.Application excelApp = null;
+            try
+            {
+                excelApp = (MSExcel.Application) System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
+            }
+            catch
+            {
+            }
+
+            if (excelApp == null)
+                return;
+
+            MSExcel.Workbook workbook = null;
+            foreach (MSExcel.Workbook wb in excelApp.Workbooks)
+            {
+                if (wb.FullName.ToLower() == filePath.ToLower())
+                {
+                    workbook = wb;
+                    break;
+                }
+            }
+
+            if(workbook != null)
+                workbook.Close(false);
+        }
+
+        public static void CloseWorkbookAndApp(string filePath)
+        {
+            MSExcel.Application excelApp = null;
+            try
+            {
+                excelApp = (MSExcel.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
+            }
+            catch
+            {
+            }
+
+            if (excelApp == null)
+                return;
+
+            MSExcel.Workbook workbook = null;
+            foreach (MSExcel.Workbook wb in excelApp.Workbooks)
+            {
+                if (wb.FullName.ToLower() == filePath.ToLower())
+                {
+                    workbook = wb;
+                    break;
+                }
+            }
+
+            if (workbook != null)
+            {
+                workbook.Close(false);
+                excelApp.Quit();
+            }
         }
 
         /// <summary>
