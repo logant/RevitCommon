@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>RevitCommon</id>
-    <version>1.1.3.1</version>
+    <version>1.2.0.0</version>
     <title>RevitCommon</title>
     <authors>Timothy Logan</authors>
     <owners>HKS LINE, www.hksline.com</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/logant/RevitCommon</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Common Revit API Functionality</description>
-    <releaseNotes>Beta Release with Victor Chekalin's ExtensibleStorageExtension integrated.</releaseNotes>
+    <releaseNotes>Release with Victor Chekalin's ExtensibleStorageExtension integrated.</releaseNotes>
     <copyright>Copyright 2018</copyright>
     <tags>RevitCommon HKS LINE</tags>
     <dependencies>
