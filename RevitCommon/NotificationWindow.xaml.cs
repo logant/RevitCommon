@@ -15,10 +15,6 @@ namespace RevitCommon
     /// </summary>
     public partial class NotificationWindow : Window
     {
-        // Brushes for the button fills
-        LinearGradientBrush eBrush = new LinearGradientBrush(Color.FromArgb(255, 245, 245, 245), Color.FromArgb(255, 195, 195, 195), new Point(0, 0), new Point(0, 1));
-        SolidColorBrush lBrush = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
-
         DoubleAnimation animation;
         int delay = 4;
 
@@ -64,7 +60,10 @@ namespace RevitCommon
 
             if (randomImg)
             {
-                string imgDir = @"\\nt11\00\00603.000\01_LINE\tlogan\_PluginContent";
+                string imgDir = HKS.GetPath("ee-image-path");
+                if (string.IsNullOrEmpty(imgDir))
+                    return;
+                
                 string filePath = string.Empty;
                 if(System.IO.Directory.Exists(imgDir))
                 {
@@ -132,16 +131,6 @@ namespace RevitCommon
             catch { }
             // Close the form
             Close();
-        }
-
-        private void closeButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            closeRect.Fill = lBrush;
-        }
-
-        private void closeButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            closeRect.Fill = eBrush;
         }
 
         private void Border_MouseEnter(object sender, MouseEventArgs e)

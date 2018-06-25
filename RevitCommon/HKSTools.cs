@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using Autodesk.Revit.DB;
 using adWin = Autodesk.Windows;
 
@@ -8,12 +9,6 @@ namespace RevitCommon
 {
     public class HKS
     {
-        // Old Log Path. The line server was moved from NT11 to LINE-FS-01
-        //private static string logPath = @"\\nt11\00\00603.000\01_LINE\tlogan\experiements\LINEtools_[YEAR].txt";
-
-        // Current server path.
-        private static string logPath = @"\\line-fs-01\01_Projects\Side-Projects\RevitPlugin_Logging\LINEtools_[YEAR].txt";
-
         /// <summary>
         /// Returns the scale of a document assuming a meter as the base unit.  So meters should be 1.0, feet should be 0.3048 and so on.
         /// </summary>
@@ -73,6 +68,11 @@ namespace RevitCommon
         {
             try
             {
+                // Check to see if the log file exists
+                string logPath = GetPath("paths/log-path");
+                if (string.IsNullOrEmpty(logPath))
+                    return;
+
                 // Get the current year so app usage is organized into different fiels by year
                 string year = DateTime.Now.Year.ToString();
 
@@ -93,47 +93,61 @@ namespace RevitCommon
                     string[] newData = { "DATE & TIME, USERNAME, PLUGIN NAME, APPLICATION", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "," + userName + "," + commandName + "," + appVersion };
                     File.WriteAllLines(userLogFilePath, newData);
                 }
-                // else it probably is being run outside of HKS's network or the file is busy.  Consider making a simple webcall to a website?
+                // else it probably is being run outside of network or the file is busy.
 
-                // EasterEgg Pop-Up
-                Random r = new Random();
-                int choice = r.Next(1000);
-                // Currently disabled
-                choice = 1001;
-                if (choice <= 150)
-                {
-                    bool lineNotification = false;
-                    if (choice <= 50)
-                        lineNotification = true;
-                    string message = "$10 has been deducted from your project budget and given to HKS LINE to fund more awesome tools!";
-
-                    if (File.Exists(@"\\nt11\00\00603.000\01_LINE\tlogan\_PluginContent\basho.txt"))
-                    {
-                        List<string> bashoHaikus = new List<string>();
-                        StreamReader reader = new StreamReader(@"\\nt11\00\00603.000\01_LINE\tlogan\_PluginContent\basho.txt");
-                        string line;
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            bashoHaikus.Add(line.Replace("\\n", Environment.NewLine));
-                        }
-
-                        choice = r.Next(10);
-                        if (choice > 6)
-                        {
-                            choice = r.Next(bashoHaikus.Count - 1);
-                            message = bashoHaikus[choice];
-                        }
-                    }
-
-                    // Show the apprpriate notification.
-                    if (lineNotification)
-                        UI.Notification("LINE Thanks You!", message, true);
-                    else
-                        ShowBalloonTip("LINE Thanks You!", message, string.Empty);
-                }
+                // I thought this would be an amusing joke, popping up a random balloon message from the Revit communication center
+                // It would have shown a random, though currated, image and a haiku from Basho. This would happen for about 15% of use, 
+                // and then 5% would get an additional pop-up notification saying money has been deducted from the project and given 
+                // to LINE. The rest of my colleagues did not find it as amusing as I did so it is disabled, though preserved. :(
+                //EasterEgg();
             }
             catch 
             {
+            }
+        }
+
+        private static void EasterEgg()
+        {
+            // EasterEgg path
+            string path = GetPath("ee-path");
+            if (string.IsNullOrWhiteSpace(path))
+                return;
+
+            // EasterEgg Pop-Up
+            Random r = new Random();
+            int choice = r.Next(1000);
+            // Currently disabled
+            choice = 1001;
+            if (choice <= 150)
+            {
+                bool lineNotification = false;
+                if (choice <= 50)
+                    lineNotification = true;
+                string message = "$10 has been deducted from your project budget and given to HKS LINE to fund more awesome tools!";
+
+                if (File.Exists(path))
+                {
+                    List<string> bashoHaikus = new List<string>();
+                    StreamReader reader = new StreamReader(path);
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        bashoHaikus.Add(line.Replace("\\n", Environment.NewLine));
+                    }
+
+                    choice = r.Next(10);
+                    if (choice > 6)
+                    {
+                        choice = r.Next(bashoHaikus.Count - 1);
+                        message = bashoHaikus[choice];
+                    }
+                }
+
+                // Show the apprpriate notification.
+                if (lineNotification)
+                    UI.Notification("LINE Thanks You!", message, true);
+                else
+                    ShowBalloonTip("LINE Thanks You!", message, string.Empty);
             }
         }
 
@@ -156,6 +170,42 @@ namespace RevitCommon
         {
             Autodesk.Internal.InfoCenter.ResultItem ri = (Autodesk.Internal.InfoCenter.ResultItem)sender;
             System.Diagnostics.Process.Start(ri.Uri.ToString());
+        }
+
+        public static string GetPath(string xmlNodePath)
+        {
+            string path = string.Empty;
+            var directoryInfo = new FileInfo(typeof(HKS).Assembly.Location).Directory;
+            if (directoryInfo == null)
+                return null;
+
+            var configPath = directoryInfo.FullName + "\\RevitCommon.config";
+            if (!File.Exists(configPath))
+                return null;
+
+            var configStr = File.ReadAllText(configPath);
+            XmlDocument xDoc = new XmlDocument();
+            try
+            {
+                xDoc.LoadXml(configStr);
+                XmlNode node = xDoc.SelectSingleNode(xmlNodePath);
+                path = node.InnerText;
+                
+                // Check to see if the path is a directory
+                if (!Directory.Exists(path))
+                {
+                    // Check to see if it is instead a file
+                    var fileDir = new FileInfo(path).Directory;
+                    if ((fileDir != null && !Directory.Exists(fileDir.FullName)) || fileDir == null)
+                        return null;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+
+            return path;
         }
     }
 }
