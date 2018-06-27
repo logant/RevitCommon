@@ -73,7 +73,7 @@ namespace RevitCommon
                 if (string.IsNullOrEmpty(logPath))
                     return;
 
-                // Get the current year so app usage is organized into different fiels by year
+                // Get the current year so app usage is organized into different files by year
                 string year = DateTime.Now.Year.ToString();
 
                 // Path to where the log is stored
