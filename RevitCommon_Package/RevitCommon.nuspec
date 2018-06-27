@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>RevitCommon</id>
-    <version>1.2.1.0</version>
+    <version>1.2.3.0</version>
     <title>RevitCommon</title>
     <authors>Timothy Logan</authors>
     <owners>HKS LINE, www.hksline.com</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/logant/RevitCommon</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Common Revit API Functionality</description>
-    <releaseNotes>Changing log paths to a config file.</releaseNotes>
+    <releaseNotes>Obsoleting RevitCommon.HKS in favor of RevitCommon.Logging</releaseNotes>
     <copyright>Copyright 2018</copyright>
     <tags>RevitCommon HKS LINE</tags>
     <dependencies>

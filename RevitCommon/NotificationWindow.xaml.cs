@@ -60,7 +60,7 @@ namespace RevitCommon
 
             if (randomImg)
             {
-                string imgDir = HKS.GetPath("ee-image-path");
+                string imgDir = HKS.GetPath("RevitCommon/paths/ee-image-path");
                 if (string.IsNullOrEmpty(imgDir))
                     return;
                 

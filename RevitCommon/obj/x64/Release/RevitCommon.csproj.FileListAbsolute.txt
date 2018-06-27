@@ -23,3 +23,5 @@ D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\NotificationWin
 D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\NotificationWindow.baml
 D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\GeneratedInternalTypeHelper.g.cs
 D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.csproj.CoreCompileInputs.cache
+D:\Development\Git\Revit\RevitCommon\RevitCommon\obj\x64\Release\RevitCommon.csprojAssemblyReference.cache
+D:\Development\Git\Revit\RevitCommon\RevitCommon\bin\x64\Release\RevitCommon.config

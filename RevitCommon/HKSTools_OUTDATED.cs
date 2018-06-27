@@ -7,8 +7,12 @@ using adWin = Autodesk.Windows;
 
 namespace RevitCommon
 {
+    // This class  is being depreciated, replaced with a more generic FileUtils class that contains these functions and more,
+    // and makes it more general purpose than HKS oriented
+    [Obsolete("All functions moved to FileUtils class")]
     public class HKS
     {
+        private static string logPath = @"\\line-fs-01\01_Projects\Side-Projects\RevitPlugin_Logging\LINEtools_[YEAR].txt";
         /// <summary>
         /// Returns the scale of a document assuming a meter as the base unit.  So meters should be 1.0, feet should be 0.3048 and so on.
         /// </summary>
@@ -69,7 +73,6 @@ namespace RevitCommon
             try
             {
                 // Check to see if the log file exists
-                string logPath = GetPath("paths/log-path");
                 if (string.IsNullOrEmpty(logPath))
                     return;
 
@@ -112,13 +115,19 @@ namespace RevitCommon
             string path = GetPath("ee-path");
             if (string.IsNullOrWhiteSpace(path))
                 return;
+            if (!File.Exists(path))
+                return;
+
+            string pctStr = GetPath("ee-pct");
 
             // EasterEgg Pop-Up
             Random r = new Random();
             int choice = r.Next(1000);
+            
             // Currently disabled
-            choice = 1001;
-            if (choice <= 150)
+            int limit = Convert.ToInt32(1000.0 * 0);
+            System.Windows.MessageBox.Show("EasterEgg\n\nLimit: " + limit.ToString());
+            if (choice < limit)
             {
                 bool lineNotification = false;
                 if (choice <= 50)
@@ -194,10 +203,14 @@ namespace RevitCommon
                 // Check to see if the path is a directory
                 if (!Directory.Exists(path))
                 {
-                    // Check to see if it is instead a file
-                    var fileDir = new FileInfo(path).Directory;
-                    if ((fileDir != null && !Directory.Exists(fileDir.FullName)) || fileDir == null)
-                        return null;
+                    // Check to see if it's a number
+                    if (!double.TryParse(path, out double numCheck))
+                    {
+                        // Check to see if it is instead a file
+                        var fileDir = new FileInfo(path).Directory;
+                        if ((fileDir != null && !Directory.Exists(fileDir.FullName)) || fileDir == null)
+                            return null;
+                    }
                 }
             }
             catch
