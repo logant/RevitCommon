@@ -15,7 +15,7 @@ namespace RevitCommon
         /// <param name="tabName">Name of tab to place buttons</param>
         /// <param name="panelName">Name of panel to place buttons</param>
         /// <param name="buttons">List of PushButtonData to generate the buttons</param>
-        /// <returns></returns>
+        /// <returns>True if successful, False if it failed to add a button to the Ribbon.</returns>
         public static bool AddToRibbon(UIControlledApplication revApp, string tabName, string panelName, List<PushButtonData> buttons)
         {
             RibbonPanel panel = GetRibbonPanel(revApp, tabName, panelName);
@@ -42,10 +42,19 @@ namespace RevitCommon
             }
         }
 
+        /// <summary>
+        /// This method is similar to the previous one in that it creates a set of buttons on a specified tab and panel, but this one
+        /// adds a separator to the end of the buttons. 
+        /// </summary>
+        /// <param name="revApp">UIControlledApplication from an IExternalApplication StartUp method</param>
+        /// <param name="tabName">The name of the tab that you want to add a button to. This must either be 'Add-Ins' or a non-standard tab.</param>
+        /// <param name="panelName">The name of the panel that you want to add a button to.</param>
+        /// <param name="buttons">One or more buttons to add to the panel.</param>
+        /// <param name="addSeparators">Add a separator AFTER the buttons are created. This should only be True when you know additional buttons will be added</param>
+        /// <returns>True if successful, False if it failed to add a button to the Ribbon.</returns>
         public static bool AddToRibbon(UIControlledApplication revApp, string tabName, string panelName, List<PushButtonData> buttons, bool addSeparators)
         {
-            bool existingPanel = false;
-            RibbonPanel panel = GetRibbonPanel(revApp, tabName, panelName, out existingPanel);
+            RibbonPanel panel = GetRibbonPanel(revApp, tabName, panelName, out bool existingPanel);
 
             // Add the button(s) to the panel
             if (panel != null)
@@ -79,7 +88,7 @@ namespace RevitCommon
         /// <param name="tabName">Name of tab to place buttons</param>
         /// <param name="panelName">Name of panel to place buttons</param>
         /// <param name="button">List of PushButtonData to generate the buttons</param>
-        /// <returns></returns>
+        /// <returns>True if successful, False if it failed to add a button to the Ribbon.</returns>
         public static bool AddToRibbon(UIControlledApplication revApp, string tabName, string panelName, PushButtonData button)
         {
             RibbonPanel panel = GetRibbonPanel(revApp, tabName, panelName);
@@ -104,8 +113,8 @@ namespace RevitCommon
         /// <param name="revApp">Revit's UIControlledApplication for adding the button</param>
         /// <param name="tabName">Name of the tab you want to add the button to.</param>
         /// <param name="panelName">Name of the panel on the tab you want to add the button</param>
-        /// <param name="button">SplitPushButton to add</param>
-        /// <returns></returns>
+        /// <param name="button">SplitButtonData object to add to the ribbon.</param>
+        /// <returns>If successful, a SplitButton object is returned that can be used to add commands from its drop-down. If unsuccessful, it returns null.</returns>
         public static SplitButton AddToRibbon(UIControlledApplication revApp, string tabName, string panelName, SplitButtonData button)
         {
             RibbonPanel panel = GetRibbonPanel(revApp, tabName, panelName);
@@ -121,7 +130,8 @@ namespace RevitCommon
         }
 
         /// <summary>
-        /// Add a PullDownbutton to Revit
+        /// Add a PullDownbutton to Revit. Similar to the SplitButton created in the above method, but PullDownButtons
+        /// do not have a default command and will only show the list of command options when clicked.
         /// </summary>
         /// <param name="revApp">Revit's UIControlledApplication for adding the button</param>
         /// <param name="tabName">Name of the tab you want to add the button to.</param>
@@ -143,7 +153,7 @@ namespace RevitCommon
         }
 
         /// <summary>
-        /// Create a stack of 3 buttons in the Revit UI.
+        /// Create a stack of 3 small buttons in the Revit UI.
         /// </summary>
         /// <param name="revApp">Revit's UIControlledApplication for adding the button</param>
         /// <param name="tabName">Name of the tab you want to add the button to.</param>
@@ -206,6 +216,15 @@ namespace RevitCommon
             return true;
         }
 
+        /// <summary>
+        /// This is used by the other methods in this class, it's purpose is to find or create the tab and panel specified by
+        /// the inputs. If the items do not exist they get created, if they do exist they're found and returned. This should only
+        /// be used with a tab name that is non-default to the Revit Ribbon, excepting the Add-Ins tab which is allowed.
+        /// </summary>
+        /// <param name="revApp">UIControlledApplication from the IExternalApplication's OnStartUp method.</param>
+        /// <param name="tabName">Name of the tab a button will be created on. Only Add-Ins is acceptable from the default Revit tabs.</param>
+        /// <param name="panelName">Name of the panel the button will be created on.</param>
+        /// <returns></returns>
         private static RibbonPanel GetRibbonPanel(UIControlledApplication revApp, string tabName, string panelName)
         {
             try
@@ -265,7 +284,7 @@ namespace RevitCommon
         {
             try
             {
-                // Verify if the tab exists, create it if ncessary
+                // Verify if the tab exists, create it if necessary
                 adWin.RibbonControl ribbon = adWin.ComponentManager.Ribbon;
                 adWin.RibbonTab tab = null;
                 bool defaultTab = false;
@@ -319,6 +338,13 @@ namespace RevitCommon
             }
         }
 
+        /*
+         *
+         *  I believe the following methods are all used for the EasterEgg functionality when it pops up the
+         *  message about money being deducted from the project and given to LINE. As that's disabled by default
+         *  and may never be enabled, its safe to delete these if I ever purge those commands out of this tool.
+         *
+         */
         public static void Notification(string title, string message, string imagePath)
         {
             System.Diagnostics.Process process = System.Diagnostics.Process.GetCurrentProcess();

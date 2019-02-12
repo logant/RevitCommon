@@ -485,7 +485,7 @@ namespace RevitCommon
             MSExcel.Workbook workbook = null;
 
             bool alreadyOpen = false;
-            bool wbOpen = false;
+            //bool wbOpen = false;
             try
             {
                 excelApp = (MSExcel.Application) System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
@@ -711,6 +711,10 @@ namespace RevitCommon
         }
     }
 
+
+    /// <summary>
+    /// This class is for getting formatting data from an Excel Cell object and is used primarily in the Excel Schedule Link plugin.
+    /// </summary>
     public class ExCell
     {
         public string Value { get; set; }
