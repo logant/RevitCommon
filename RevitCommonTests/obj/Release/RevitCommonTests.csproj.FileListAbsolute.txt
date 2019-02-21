@@ -1,8 +1,0 @@
-D:\Development\Git\Revit\RevitLib\RevitCommonTests\bin\Release\RevitCommonTests.exe.config
-D:\Development\Git\Revit\RevitLib\RevitCommonTests\bin\Release\RevitCommonTests.exe
-D:\Development\Git\Revit\RevitLib\RevitCommonTests\bin\Release\RevitCommonTests.pdb
-D:\Development\Git\Revit\RevitLib\RevitCommonTests\bin\Release\LINE.RevitCommon.dll
-D:\Development\Git\Revit\RevitLib\RevitCommonTests\bin\Release\LINE.RevitCommon.pdb
-D:\Development\Git\Revit\RevitLib\RevitCommonTests\obj\Release\RevitCommonTests.csprojResolveAssemblyReference.cache
-D:\Development\Git\Revit\RevitLib\RevitCommonTests\obj\Release\RevitCommonTests.exe
-D:\Development\Git\Revit\RevitLib\RevitCommonTests\obj\Release\RevitCommonTests.pdb
