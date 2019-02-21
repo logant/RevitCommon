@@ -95,105 +95,8 @@ namespace RevitCommon
                     File.WriteAllLines(userLogFilePath, newData);
                 }
                 // else it probably is being run outside of network or the file is busy.
-
-                // I thought this would be an amusing joke, popping up a random balloon message from the Revit communication center
-                // It would have shown a random, though curated image and a haiku from Basho. This would happen for about 15% of use, 
-                // and then 5% would get an additional pop-up notification saying money has been deducted from the project and given 
-                // to LINE. The rest of my colleagues did not find it as amusing as I did so it is disabled, though preserved. :(
-                EasterEgg();
             }
             catch { } // FileUtils failed, but as it doesn't affect the user we'll ignore
-        }
-
-        /// <summary>
-        /// This was just for my amusement. I made a single tool that would occasionally pop up a message about money being deducted
-        /// and given to LINE, which some people found amusing. It was a little used tool, so when applied to a larger group there was
-        /// some push back against having jokes, so I've disabled them for now by setting the easter egg percentage to 0 (Variable at
-        /// RevitCommon/paths/ee-pct in the RevitCommon.config file) and as the default if no config parameter is found.
-        /// </summary>
-        private static void EasterEgg()
-        {
-            // EasterEgg path
-            string path = GetPath("RevitCommon/paths/ee-path");
-            if (string.IsNullOrWhiteSpace(path))
-                return;
-            if (!File.Exists(path))
-                return;
-
-            string pctStr = GetPath("RevitCommon/paths/ee-pct");
-            if (!double.TryParse(pctStr, out double pct))
-                pct = 0;
-
-            // EasterEgg Pop-Up
-            Random r = new Random();
-            int choice = r.Next(1000);
-
-            // Currently disabled
-            int limit = Convert.ToInt32(1000.0 * pct);
-
-            if (choice < limit)
-            {
-                bool lineNotification = choice <= 50;
-
-                string message = "$10 has been deducted from your project budget and given to HKS LINE to fund more awesome tools!";
-                if (File.Exists(path))
-                {
-                    List<string> bashoHaikus = new List<string>();
-                    StreamReader reader = new StreamReader(path);
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        bashoHaikus.Add(line.Replace("\\n", Environment.NewLine));
-                    }
-
-                    choice = r.Next(10);
-                    if (choice > 6)
-                    {
-                        choice = r.Next(bashoHaikus.Count - 1);
-                        message = bashoHaikus[choice];
-                    }
-                }
-
-                // Show the apprpriate notification.
-                if (lineNotification)
-                    UI.Notification("LINE Thanks You!", message, true);
-                else
-                    ShowBalloonTip("LINE Thanks You!", message, string.Empty);
-            }
-        }
-
-        /// <summary>
-        /// This is related to the EasterEgg method. It shows a message from the Revit Info Center (top right on title bar).
-        /// </summary>
-        /// <param name="title">Title of the message</param>
-        /// <param name="message">Main message content</param>
-        /// <param name="toolTip">Tooltip text if desired.</param>
-        public static void ShowBalloonTip(string title, string message, string toolTip)
-        {
-            Autodesk.Internal.InfoCenter.ResultItem ri = new Autodesk.Internal.InfoCenter.ResultItem
-            {
-                Category = title,
-                Title = message,
-                TooltipText = toolTip,
-                Uri = new System.Uri("http://www.hksline.com"),
-                IsFavorite = true,
-                IsNew = true
-            };
-
-            ri.ResultClicked += new EventHandler<Autodesk.Internal.InfoCenter.ResultClickEventArgs>(ri_ResultClicked);
-
-            adWin.ComponentManager.InfoCenterPaletteManager.ShowBalloon(ri);
-        }
-
-        /// <summary>
-        /// This is also related to the EasterEgg method. This handles the InfoCenter click event.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private static void ri_ResultClicked(object sender, Autodesk.Internal.InfoCenter.ResultClickEventArgs e)
-        {
-            Autodesk.Internal.InfoCenter.ResultItem ri = (Autodesk.Internal.InfoCenter.ResultItem)sender;
-            System.Diagnostics.Process.Start(ri.Uri.ToString());
         }
 
         /// <summary>
@@ -296,7 +199,8 @@ namespace RevitCommon
 
             if (helpNode != null)
             {
-                if (File.Exists(helpNode.InnerText))
+                if (File.Exists(helpNode.InnerText) || (Uri.TryCreate(helpNode.InnerText, UriKind.Absolute, out Uri uriResult) && 
+                    (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps)))
                     helpPath = helpNode.InnerText;
                 else
                 {
@@ -314,81 +218,5 @@ namespace RevitCommon
 
             return true;
         }
-
-        /*
-
-        ===============================================================================================================================
-
-        I BELIEVE THIS METHOD IS UNNECESSARY AS IT'S JUST A LONGER WAY DOING WHAT SYSTEM.IO.PATH.COMBINE DOES WILL VERIFY IT STILL WORKS
-        AND THEN SEE ABOUT DELETING IT BEFORE PUSHING IT BACK TO THE REPO.
-
-        ===============================================================================================================================
-
-        /// <summary>
-        /// This is used to find the full path when given a relative path. It's intended to be used for things like
-        /// the RevitCommon/plugin/help-path that's part of a plugin definition in the RevitCommon.config file. It combines
-        /// the relative path in the config file with the assembly's location.
-        /// </summary>
-        /// <param name="initPath"></param>
-        /// <returns></returns>
-        private static string GetFullPath(string initPath)
-        {
-            // Check to see if the directory is an absolute path
-            if (File.Exists(initPath))
-                return initPath;
-
-            // Check to see if it's an ancestor path to where we are at
-            string loc = typeof(FileUtils).Assembly.Location;
-            DirectoryInfo dirInfo = new FileInfo(loc).Directory;
-
-            // Check to see if the file is in the same directory
-            //if (File.Exists(dirInfo.FullName + "\\" + initPath))
-//                return dirInfo.FullName + "\\" + initPath;
-            
-            // Check to see if there are some steps back we need to take.
-            string[] pathParts = initPath.Split(new char[] { '\\' });
-            if (pathParts.Length == 0)
-                return null;
-
-            string combined = dirInfo.FullName + "\\" + initPath;
-            if (pathParts[0] != "..")
-            {
-                combined = dirInfo.FullName + "\\" + initPath;
-                if (File.Exists(combined))
-                    return combined;
-
-                // File doesn't seem to exist
-                return null;
-            }
-
-
-            // find out how many steps back we need to make
-            int stepsBack = 0;
-            foreach (string part in pathParts)
-            {
-                if (part == "..")
-                    stepsBack++;
-            }
-
-            // Check get the new base location
-            for (int i = 0; i < stepsBack; i++)
-            {
-                dirInfo = dirInfo.Parent;
-            }
-            // get the initpath without the steps back
-            string newInit = string.Empty;
-            for (int i = stepsBack; i < pathParts.Length; i++)
-            {
-                newInit += "\\" + pathParts[i];
-            }
-
-            // Final Path
-            combined = dirInfo.FullName + newInit;
-            if(File.Exists(combined))
-                return combined;
-
-            return null;
-        }
-        */
     }
 }

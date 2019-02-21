@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Windows;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.ExtensibleStorage;
 using RevitCommon.Attributes;
@@ -24,8 +25,8 @@ namespace RevitCommon.ElementExtensions
             ISchemaCreator schemaCreator = new SchemaCreator();
             IEntityConverter entityConverter = new EntityConverter(schemaCreator);
             Entity entity = entityConverter.Convert(revitEntity);
-
             element.SetEntity(entity);
+            
         }
 
         public static TRevitEntity GetEntity<TRevitEntity>(this Element element)

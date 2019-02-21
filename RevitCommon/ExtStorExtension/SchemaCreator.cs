@@ -11,6 +11,7 @@
 
 using System;
 using System.Reflection;
+using System.Text;
 using Autodesk.Revit.DB.ExtensibleStorage;
 using RevitCommon.Attributes;
 
@@ -32,16 +33,24 @@ namespace RevitCommon
 
         public Schema CreateSchema(Type type)
         {
+            
             SchemaAttribute schemaAttribute =
                 _schemaAttributeExtractor.GetAttribute(type);
+
+            // see if the schema already exists
+            Schema schema = Schema.Lookup(schemaAttribute.GUID);
+            if (null != schema && schema.IsValidObject)
+                return schema;
 
             // Create a new Schema using SchemaAttribute Properties
             SchemaBuilder schemaBuilder = new SchemaBuilder(schemaAttribute.GUID);
             schemaBuilder.SetSchemaName(schemaAttribute.SchemaName);
-
             // Set up other schema properties if they exists
             if (schemaAttribute.ApplicationGUID != Guid.Empty)
                 schemaBuilder.SetApplicationGUID(schemaAttribute.ApplicationGUID);
+
+            if (!string.IsNullOrEmpty(schemaAttribute.VendorId))
+                schemaBuilder.SetVendorId(schemaAttribute.VendorId);
 
             if (!string.IsNullOrEmpty(schemaAttribute.Documentation))
                 schemaBuilder.SetDocumentation(schemaAttribute.Documentation);
@@ -50,10 +59,9 @@ namespace RevitCommon
                 schemaBuilder.SetReadAccessLevel(schemaAttribute.ReadAccessLevel);
 
             if (schemaAttribute.WriteAccessLevel != default(AccessLevel))
-                schemaBuilder.SetReadAccessLevel(schemaAttribute.WriteAccessLevel);
+                schemaBuilder.SetWriteAccessLevel(schemaAttribute.WriteAccessLevel);
 
-            if (!string.IsNullOrEmpty(schemaAttribute.VendorId))
-                schemaAttribute.VendorId = schemaAttribute.VendorId;
+            
 
             var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
@@ -95,11 +103,9 @@ namespace RevitCommon
                     fieldBuilder.SetDocumentation(fieldAttribute.Documentation);
                 if (fieldBuilder.NeedsUnits())
                     fieldBuilder.SetUnitType(fieldAttribute.UnitType);
-
-
             }
-
-            return schemaBuilder.Finish();
+            Schema newSchema = schemaBuilder.Finish();
+            return newSchema;
         }
 
         #endregion

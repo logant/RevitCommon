@@ -27,8 +27,6 @@ namespace RevitCommon.Attributes
             _guid = new Guid(guid);
         }
 
-
-
         public string SchemaName
         {
             get { return _schemaName; }
