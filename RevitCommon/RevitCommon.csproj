@@ -136,7 +136,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>call "$(ProjectDir)SignRevitCommon.bat" "$(TargetPath)"
+    <PostBuildEvent>call "$(SolutionDir)Secrets\SignBuild.bat" "$(TargetPath)"
 copy "$(TargetPath)" "$(SolutionDir)RevitCommon_Package\lib\net45"
 copy "$(ProjectDir)RevitCommon-template.config" "$(SolutionDir)RevitCommon_Package\lib\net45"
 copy "$(ProjectDir)RevitCommon-template.config" "$(TargetDirDir)"</PostBuildEvent>

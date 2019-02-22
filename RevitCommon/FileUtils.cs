@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using System.Xml.Linq;
 using Autodesk.Revit.DB;
 using adWin = Autodesk.Windows;
 
@@ -215,6 +216,46 @@ namespace RevitCommon
                 tabName = tabNode.InnerText;
             if (panelNode != null)
                 panelName = panelNode.InnerText;
+
+            return true;
+        }
+
+        public static bool GetPluginSettings(string pluginName, out Dictionary<string, string> settings)
+        {
+            settings = new Dictionary<string, string>();
+            string configPath = new FileInfo(typeof(FileUtils).Assembly.Location).Directory.FullName + "\\RevitCommon.config";
+            if (!File.Exists(configPath))
+            {
+                return false;
+            }
+
+            // Load the XmlDocument that contains the settings
+            XmlDocument xDoc = new XmlDocument();
+            try
+            {
+                xDoc.Load(configPath);
+            }
+            catch
+            {
+                return false;
+            }
+
+            // Look for plugin nodes
+            XmlNodeList nodes = xDoc.SelectNodes("RevitCommon/plugin[@name='" + pluginName + "']");
+            if (nodes.Count < 1)
+                return false;
+
+            XmlNode pNode = nodes[0];
+            if (pNode == null)
+                return false;
+
+            foreach(XmlNode node in pNode.ChildNodes)
+            {
+                if (!settings.ContainsKey(node.LocalName))
+                    settings.Add(node.LocalName, node.InnerText);
+                else
+                    settings[node.LocalName] = node.InnerText;
+            }
 
             return true;
         }
