@@ -14,17 +14,18 @@
 *.userprefs
 
 # Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-bld/
+RevitCommon/[Dd]ebug/
+RevitCommon/[Dd]ebugPublic/
+RevitCommon/[Rr]elease/
+RevitCommon/[Rr]eleases/
+RevitCommon/x64/
+RevitCommon/x86/
+RevitCommon/bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
 RevitCommonTests/
+Secrets/
 
 # Visual Studio 2015 cache/options directory
 .vs/
