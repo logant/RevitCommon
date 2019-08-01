@@ -8,7 +8,7 @@
 *.sln.docstates
 *.nupkg
 *.dll
-SignRevitCommon.bat
+
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

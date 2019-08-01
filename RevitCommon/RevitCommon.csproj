@@ -93,6 +93,7 @@
     <Compile Include="ExtStorExtension\SchemaNameAttribute.cs" />
     <Compile Include="ExtStorExtension\RevitEntityElementExtension.cs" />
     <Compile Include="ExtStorExtension\SchemaCreator.cs" />
+    <Compile Include="HKSTools_OBSOLETE.cs" />
     <Compile Include="UITools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
